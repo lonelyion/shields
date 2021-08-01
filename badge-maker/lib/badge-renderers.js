@@ -3,6 +3,7 @@
 const anafanafo = require('anafanafo')
 const { brightness } = require('./color')
 const { XmlElement, escapeXml } = require('./xml')
+const axios = require('axios').default
 
 // https://github.com/badges/shields/pull/1132
 const FONT_SCALE_UP_FACTOR = 10
@@ -69,17 +70,24 @@ function renderLogo({
   horizPadding,
   logoWidth = 14,
   logoPadding = 0,
+  logoColor
 }) {
   if (logo) {
     const logoHeight = 14
     const y = (badgeHeight - logoHeight) / 2
     const x = horizPadding
+    let svg = "";
+    axios.get(escapeXml(logo)).then(res => svg = res.data);
+    if(logoColor) {
+      svg.replace(/fill=\"([^"]*)\"/g, `fill="#${logoColor}"`)
+    }
     return {
       hasLogo: true,
       totalLogoWidth: logoWidth + logoPadding,
-      renderedLogo: `<image x="${x}" y="${y}" width="${logoWidth}" height="${logoHeight}" xlink:href="${escapeXml(
-        logo
-      )}"/>`,
+      //renderedLogo: `<image x="${x}" y="${y}" width="${logoWidth}" height="${logoHeight}" xlink:href="${escapeXml(
+      //  logo
+      //)}"/>`,
+      renderedLogo: svg.replace('<svg', `<svg x="${x}" y="${y}" width="${logoWidth}" height="${logoHeight}"`)
     }
   } else {
     return { hasLogo: false, totalLogoWidth: 0, renderedLogo: '' }
@@ -195,6 +203,7 @@ class Badge {
     logoPadding,
     color = '#4c1',
     labelColor,
+    logoColor,
   }) {
     const horizPadding = 5
     const { hasLogo, totalLogoWidth, renderedLogo } = renderLogo({
@@ -203,6 +212,7 @@ class Badge {
       horizPadding,
       logoWidth,
       logoPadding,
+      logoColor
     })
     const hasLabel = label.length || labelColor
     if (labelColor == null) {
