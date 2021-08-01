@@ -1,7 +1,7 @@
 {
   "name": "badge-maker",
   "version": "3.3.1",
-  "description": "Shields.io badge library",
+  "description": "Shields.io badge library (lonelyion fork)",
   "keywords": [
     "GitHub",
     "badge",

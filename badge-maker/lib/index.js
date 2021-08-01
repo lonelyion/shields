@@ -38,7 +38,7 @@ function _validate(format) {
 }
 
 function _clean(format) {
-  const expectedKeys = ['label', 'message', 'labelColor', 'color', 'style']
+  const expectedKeys = ['label', 'message', 'labelColor', 'color', 'style', 'logo']
 
   const cleaned = {}
   Object.keys(format).forEach(key => {
